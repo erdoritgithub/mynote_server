@@ -1,7 +1,7 @@
 const express= require('express')
 const router= express.Router()
 const Books= require('../controllers/Books')
-const Users= require('../controllers/Users')
+const Register= require('../controllers/Register')
 
 // define the home page route
 router.get('/', (req, res) => {
@@ -10,15 +10,15 @@ router.get('/', (req, res) => {
 // define the about route
 
 // users
-router.post('/users', Users.createUsers)
+router.post('/users', Register.createUsers)
 
-router.get('/users', Users.getAllUsers)
-router.get('/users/:id', Users.getUser)
+router.get('/users', Register.getAllUsers)
+router.get('/users/:id', Register.getUser)
 router.get('/books', Books.getAllBooks)
 
-router.put('/users/:id', Users.updateUser)
+router.put('/users/:id', Register.updateUser)
 
-router.delete('/users/:id', Users.deleteUser)
+router.delete('/users/:id', Register.deleteUser)
 
 router.get('/*', (req, res) => {
     res.status(500).send('404 not Found')
