@@ -24,6 +24,9 @@ const User = sequelize.define('user', {
     type: DataTypes.STRING,
     allowNull: false,
     require: true
+  },
+  refresh_token: {
+    type: DataTypes.STRING
   }
 })
 

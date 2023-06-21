@@ -1,7 +1,10 @@
 const express= require('express')
 const router= express.Router()
 const Books= require('../controllers/Books')
-const Register= require('../controllers/Register')
+const Users= require('../controllers/Users')
+const Login= require('../controllers/Login')
+const refreshToken= require('../controllers/RefreshToken')
+const isAuth= require('../middleware/auth')
 
 // define the home page route
 router.get('/', (req, res) => {
@@ -10,15 +13,18 @@ router.get('/', (req, res) => {
 // define the about route
 
 // users
-router.post('/users', Register.createUsers)
+router.post('/users/register', Users.registerUsers)
+router.post('/users/login', Login.loginUser)
 
-router.get('/users', Register.getAllUsers)
-router.get('/users/:id', Register.getUser)
+router.get('/users', isAuth, Users.getAllUsers)
+router.get('/users/:id', Users.getUser)
 router.get('/books', Books.getAllBooks)
+router.get('/token', refreshToken)
+router.delete('/logout', Login.logoutUser)
 
-router.put('/users/:id', Register.updateUser)
+router.put('/users/:id', Users.updateUser)
 
-router.delete('/users/:id', Register.deleteUser)
+router.delete('/users/:id', Users.deleteUser)
 
 router.get('/*', (req, res) => {
     res.status(500).send('404 not Found')

@@ -5,9 +5,9 @@ const dotenv= require('dotenv')
 
 dotenv.config()
 
-class Register{
+class Users{
 
-    static createUsers= async (req, res) => {
+    static registerUsers= async (req, res) => {
 
         const saltKey= parseInt(process.env.SECRET_SALT_KEY)
         const salt = bcrypt.genSaltSync(saltKey);
@@ -130,4 +130,4 @@ class Register{
     }
 }
 
-module.exports= Register
+module.exports= Users
