@@ -6,43 +6,32 @@ const jwt= require('jsonwebtoken')
 dotenv.config()
 
 class Login{
+
+    // User login
     static loginUser= async (req, res) => {
 
         try {
 
-            const accessToken= jwt.sign({ data: req.body.username }, process.env.JWT_SECRET_KEY, 
-            { expiresIn: '1m' });
-
-            const refreshToken= jwt.sign({ data: req.body.username }, 
-                process.env.JWT_REFRESH_SECRET_KEY, { expiresIn: '1d' });
-
-            const updatedUser= await User.update( {refresh_token: refreshToken} , {
-                where: {
-                    username: req.body.username
-                }
-            });
-
+            // find user by username
             const user= await User.findAll({
                 where: {
                   username: req.body.username
                 }
             });
 
-            res.cookie('refreshToken', refreshToken, { 
-                httpOnly: true, 
-                maxAge: 24 * 60 * 60 * 1000 
-            })
+            // displaying the result of user
+            const result = {
+                username: user[0].username,
+                email: user[0].email,
+                token: user[0].token
+            }
 
+            // comparing the request password and hash password
             const resultPasswordCompare = bcrypt.compareSync(req.body.password, user[0].password)
 
-            const result= [
-                {user},
-                {"token": accessToken}
-            ]
-    
-
+            // check the result of compare
             if(resultPasswordCompare){
-                res.status(200).json(result)
+                return res.status(200).json(result)
             }else{
                 return res.status(500).send("username or password is wrong")
             }
@@ -53,29 +42,44 @@ class Login{
         
     }
 
+    // userLogout
     static logoutUser= async(req, res) => {
-        const refreshToken= req.cookies.refreshToken
-        console.log(refreshToken)
-        if(!refreshToken){
-            return res.sendStatus(204)
+        try {    
+            // get cookie
+            const refreshToken= req.cookies.refreshToken
+    
+            // check if cookie is not exist
+            if(!refreshToken){
+                return res.sendStatus(204)
+            }
+    
+            // find user by refresh_token
+            const user= await User.findAll({
+                where: {
+                    refresh_token: refreshToken
+                }
+            })
+    
+            // check if user is not exist
+            if(!user) {
+                // delete cookie if user is not exist
+                res.clearCookie('refreshToken')
+                return res.sendStatus(204)
+            }
+    
+            // update the refresh_token
+            await User.update({refresh_token: null}, {
+                where:{
+                    id: user[0].id
+                }
+            })
+    
+            // delete cookie
+            res.clearCookie('refreshToken')
+            return res.sendStatus(200)
+        } catch (error) {
+            res.send(error)
         }
-
-        const user= await User.findAll({
-            where: {
-                refresh_token: refreshToken
-            }
-        })
-
-        if(!user) return res.sendStatus(204)
-
-        await User.update({refresh_token: null}, {
-            where:{
-                id: user[0].id
-            }
-        })
-
-        res.clearCookie('refreshToken')
-        return res.sendStatus(200)
     }
 }
 

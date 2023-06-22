@@ -1,128 +1,126 @@
-const validator = require('validator');
 const User= require('../models/UserModel')
-const bcrypt = require('bcryptjs');
-const dotenv= require('dotenv')
-
-dotenv.config()
 
 class Users{
 
+    // user registration
     static registerUsers= async (req, res) => {
-
-        const saltKey= parseInt(process.env.SECRET_SALT_KEY)
-        const salt = bcrypt.genSaltSync(saltKey);
-        let hashedPassword = bcrypt.hashSync(req.body.password, salt);
-
-        if(validator.contains(req.body.username, ' ') === true){
-            req.body.username = null
-            return res.status(500).json('username is not valid, must be no space')
-        }
-
-        if(validator.isEmail(req.body.email) === false){
-            req.body.email = null
-            return res.status(500).json('email is not valid')
-        }
-
-        if(validator.isStrongPassword(req.body.password) === false){
-            hashedPassword= null
-            return res.status(500).json(`Password at least 8 character with combination of Uppercase, lowercase` +
-            ` number and character`)
-        }
-
-        if(req.body.password !== req.body.confirmPassword){
-            hashedPassword= null
-            return res.status(500).json("password and confirm password didn't match")
-        }
-
         try {
-            
+            // create user
             const user = await User.create({
                 username: req.body.username,
                 email: req.body.email,
-                password: hashedPassword
+                password: req.body.password
             })
+
+            // displaying the result of user
+            const result = {
+                username: user.username,
+                email: user.email
+            }
     
-            res.status(200).json(user)
+            res.status(200).json(result)
             
         } catch (error) {
             res.status(500).send(error)
         }
     }
 
+    // Find all users
     static getAllUsers= async (req, res) => {
-        // Find all users
         try {
+            // find all users
             const users = await User.findAll();
-            res.status(200).json(users)
+
+            // displaying all users
+            const result = users.map((user) => (
+                {
+                    username: user.username,
+                    email: user.email
+                }
+            ))
+
+            res.status(200).json(result)
         } catch (error) {
             res.status(500).send(error)
         }
     }
 
+    // Find user by id
     static getUser= async (req, res) => {
         try {
+            // find user by id
             const user= await User.findAll({
                 where: {
                   id: req.params.id
                 }
             });
+
+            // displaying the result of user
+            const result = {
+                username: user[0].username,
+                email: user[0].email
+            }
     
-            res.status(200).json(user)
+            res.status(200).json(result)
             
         } catch (error) {
             res.status(500).send(error)
         }
     }
 
+    // Update data user
     static updateUser= async (req, res) => {
 
-        if(req.body.username){
-            if(validator.contains(req.body.username, ' ') === true){
-                req.body = null
-                return res.status(500).json('username is not valid, must be no space')
-            }
-        }
-
-        if(req.body.email){
-            if(validator.isEmail(req.body.email) === false){
-                req.body = null
-                return res.status(500).json('email is not valid')
-            }
-        }
-
         try {
-
-            const updatedUser= await User.update( req.body , {
+            // update user by id
+            await User.update( req.body , {
                 where: {
                   id: req.params.id
                 }
             });
     
+            // find user by id
             const user= await User.findAll({
                 where: {
                   id: req.params.id
                 }
             });
+
+             // displaying the result of user
+            const result = {
+                username: user[0].username,
+                email: user[0].email
+            }
     
-            res.status(200).json(user)
+            res.status(200).json(result)
             
         } catch (error) {
             res.status(500).send(error)
         }
     }
 
+    // Delete user by id
     static deleteUser= async (req, res) => {
         try {
-            // Delete everyone named "Jane"
-            const deletedUser= await User.destroy({
+            // delete user by id
+            await User.destroy({
                 where: {
                     id: req.params.id
                 }
             });
     
-            const user= await User.findAll();
+            // find all users
+            const users= await User.findAll();
+
+            // displaying the result of users
+            const result = users.map((user) => (
+                {
+                    username: user.username,
+                    email: user.email
+                }
+            ))
     
-            res.status(200).json(user)
+            res.status(200).json(result)
             
         } catch (error) {
             res.status(500).send(error)

@@ -1,8 +1,7 @@
-const { Sequelize, DataTypes } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const sequelize = require('../db')
 
 const User = sequelize.define('user', {
-  // Model attributes are defined here
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -27,6 +26,12 @@ const User = sequelize.define('user', {
   },
   refresh_token: {
     type: DataTypes.STRING
+  },
+  token: {
+    type: DataTypes.STRING
+  },
+  is_admin: {
+    type: DataTypes.TINYINT
   }
 })
 
