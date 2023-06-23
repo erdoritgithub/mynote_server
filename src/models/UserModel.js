@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db')
+const Token= require('./TokenModel')
 
 const User = sequelize.define('user', {
   id: {
@@ -34,5 +35,13 @@ const User = sequelize.define('user', {
     type: DataTypes.TINYINT
   }
 })
+
+User.hasOne(Token, {
+  foreignKey: {
+    name: 'user_id',
+    type: DataTypes.UUID
+  }
+});
+
 
 module.exports = User

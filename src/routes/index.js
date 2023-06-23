@@ -7,6 +7,7 @@ const {authMiddleware, isAdmin}= require('../middleware/authMiddleware')
 const { emailValidator, usernameValidator, passwordValidator } = require('../middleware/validator')
 const bcrypthash = require('../middleware/bcrypt')
 const jwtToken = require('../middleware/jwtToken')
+const {forgetPassword, changeForgottenPassword}= require('../controllers/ForgetPassword')
 
 // Homepage
 router.get('/', (req, res) => {
@@ -26,10 +27,14 @@ router.get('/users', authMiddleware, Users.getAllUsers)
 router.get('/users/:id', authMiddleware, Users.getUser)
 // refresh token
 router.get('/token', refreshToken)
+// forget password
+router.get('/forgetPassword/:id', forgetPassword)
 
 // put
 // update user
 router.put('/users/:id', authMiddleware, usernameValidator, emailValidator, Users.updateUser)
+router.put('/forgetPassword/:token', bcrypthash, changeForgottenPassword)
+router.put('/updatePassword/:id', authMiddleware, bcrypthash, Users.updatePassword)
 
 // delete
 // logout

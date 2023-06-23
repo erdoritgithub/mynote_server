@@ -8,7 +8,11 @@ const bcrypthash= (req, res, next) =>{
     // generate salt
     const salt = bcrypt.genSaltSync(saltKey);
     // update req.body.password to be hash password
+    if(req.body.oldPassword){
+        req.body.oldPassword = bcrypt.hashSync(req.body.oldPassword, salt);
+    }
     req.body.password = bcrypt.hashSync(req.body.password, salt);
+    req.body.confirmPassword = bcrypt.hashSync(req.body.confirmPassword, salt);
 
     next()
 }

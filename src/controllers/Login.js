@@ -1,9 +1,5 @@
 const User= require('../models/UserModel')
 const bcrypt = require('bcryptjs');
-const dotenv= require('dotenv')
-const jwt= require('jsonwebtoken')
-
-dotenv.config()
 
 class Login{
 
