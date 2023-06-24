@@ -1,4 +1,7 @@
 const User= require('../models/UserModel')
+const passwordCompare= require('../utils/passwordCompare')
+const bcrypthash= require('../utils/bcrypt')
+const { usernameValidator, emailValidator, passwordValidator } = require('../middleware/validator')
 
 class Users{
 
@@ -9,12 +12,25 @@ class Users{
             if(req.body.password !== req.body.confirmPassword){
                 return res.status(500).send('password and confirmPassword is not match')
             }
-    
-            // create user
+            
+            if(usernameValidator(req.body.username) === false){
+                return res.status(500).send('username must be no space')
+            }
+
+            if(emailValidator(req.body.email) === false){
+                return res.status(500).send('email is not valid')
+            }
+
+            if(passwordValidator(req.body.password) === false){
+                return res.status(500).send('password is not valid')
+            }
+
+            
+            // // create user
             const user = await User.create({
                 username: req.body.username,
                 email: req.body.email,
-                password: req.body.password
+                password: bcrypthash(req.body.password)
             })
 
             // displaying the result of user
@@ -26,7 +42,7 @@ class Users{
             res.status(200).json(result)
             
         } catch (error) {
-            res.status(500).send(error)
+            res.status(500).send('error from here')
         }
     }
 
@@ -75,8 +91,17 @@ class Users{
 
     // Update data user
     static updateUser= async (req, res) => {
-
+       
         try {
+
+            if(usernameValidator(req.body.username) === false){
+                return res.status(500).send('username must be no space')
+            }
+
+            if(emailValidator(req.body.email) === false){
+                return res.status(500).send('email is not valid')
+            }
+
             // update user by id
             await User.update( req.body , {
                 where: {
@@ -134,27 +159,33 @@ class Users{
 
     static updatePassword= async (req, res) => {
         try {
-            const oldPassword= await User.findAll({
+            const user= await User.findAll({
                 where: {
-                    password: req.body.oldPassword
+                    id: req.params.id
                 }
             })
-
-            if(!oldPassword){
+            
+            const resultPasswordCompare = passwordCompare(req.body.oldPassword, user[0].password)
+    
+            if(!resultPasswordCompare){
                 return res.status(500).send('old password is wrong')
+            }
+
+            if(passwordValidator(req.body.password) === false){
+                return res.status(500).send('password is not valid')
             }
 
             if(req.body.password !== req.body.confirmPassword){
                 return res.status(500).send('password and confirmPassword is not match')
             }
     
-            const user= await User.update({password: req.body.password}, {
+            const updatedUser= await User.update({password: bcrypthash(req.body.password)}, {
                 where: {
                   id: req.params.id
                 }
             });
     
-            res.status(200).json(user)
+            res.status(200).json(updatedUser)
         } catch (error) {
             res.status(500).send(error)
         }

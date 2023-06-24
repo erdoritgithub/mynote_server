@@ -4,8 +4,6 @@ const Users= require('../controllers/Users')
 const Login= require('../controllers/Login')
 const refreshToken= require('../controllers/RefreshToken')
 const {authMiddleware, isAdmin}= require('../middleware/authMiddleware')
-const { emailValidator, usernameValidator, passwordValidator } = require('../middleware/validator')
-const bcrypthash = require('../middleware/bcrypt')
 const jwtToken = require('../middleware/jwtToken')
 const {forgetPassword, changeForgottenPassword}= require('../controllers/ForgetPassword')
 
@@ -16,8 +14,7 @@ router.get('/', (req, res) => {
 
 // post
 // register
-router.post('/users/register', usernameValidator, emailValidator, passwordValidator, bcrypthash,
-Users.registerUsers)
+router.post('/users/register', Users.registerUsers)
 // login
 router.post('/users/login', jwtToken, Login.loginUser)
 
@@ -32,9 +29,9 @@ router.get('/forgetPassword/:id', forgetPassword)
 
 // put
 // update user
-router.put('/users/:id', authMiddleware, usernameValidator, emailValidator, Users.updateUser)
-router.put('/forgetPassword/:token', bcrypthash, changeForgottenPassword)
-router.put('/updatePassword/:id', authMiddleware, bcrypthash, Users.updatePassword)
+router.put('/users/:id', authMiddleware, Users.updateUser)
+router.put('/forgetPassword/:token', changeForgottenPassword)
+router.put('/updatePassword/:id', authMiddleware, Users.updatePassword)
 
 // delete
 // logout

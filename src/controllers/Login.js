@@ -1,5 +1,5 @@
 const User= require('../models/UserModel')
-const bcrypt = require('bcryptjs');
+const passwordCompare= require('../utils/passwordCompare')
 
 class Login{
 
@@ -23,7 +23,7 @@ class Login{
             }
 
             // comparing the request password and hash password
-            const resultPasswordCompare = bcrypt.compareSync(req.body.password, user[0].password)
+            const resultPasswordCompare = passwordCompare(req.body.password, user[0].password)
 
             // check the result of compare
             if(resultPasswordCompare){

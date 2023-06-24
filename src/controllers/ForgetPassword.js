@@ -3,6 +3,8 @@ const Token= require('../models/TokenModel')
 const dotenv= require('dotenv')
 const jwt= require('jsonwebtoken')
 const sendMail = require('../utils/sendMail')
+const bcrypthash= require('../utils/bcrypt')
+const { passwordValidator } = require('../middleware/validator')
 
 dotenv.config()
 
@@ -43,13 +45,17 @@ const changeForgottenPassword= async (req, res) => {
             }
         });
 
-        console.log(token)
+
+        if(passwordValidator(req.body.password) === false){
+            return res.status(500).send('password is not valid')
+        }
+
 
         if(req.body.password !== req.body.confirmPassword){
             return res.status(500).send('password and confirmPassword is not match')
         }
 
-        const user= await User.update({password: req.body.password}, {
+        const user= await User.update({password: bcrypthash(req.body.password)}, {
             where: {
               id: token[0].user_id
             }
