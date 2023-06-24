@@ -24,7 +24,7 @@ const authMiddleware = async (req, res, next) => {
         });
         
     } catch (error) {
-        res.status(500).send(error)
+        res.status(500).send('Youre not login')
     }
 }
 

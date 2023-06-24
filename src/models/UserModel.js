@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../db/index.js';
 import Token from './TokenModel.js';
+import Note from './NoteModel.js';
 
 
 const User = sequelize.define('user', {
@@ -43,5 +44,12 @@ User.hasOne(Token, {
     type: DataTypes.UUID
   }
 });
+
+User.hasMany(Note, {
+  foreignKey: {
+    name: 'user_id',
+    type: DataTypes.UUID
+  }
+})
 
 export default User
