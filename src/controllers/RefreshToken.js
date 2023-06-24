@@ -1,7 +1,6 @@
-const User= require('../models/UserModel')
-const bcrypt = require('bcryptjs');
-const dotenv= require('dotenv')
-const jwt= require('jsonwebtoken')
+import User from '../models/UserModel.js'
+import dotenv from 'dotenv'
+import jwt from 'jsonwebtoken'
 
 dotenv.config()
 
@@ -42,4 +41,4 @@ const refreshToken = async (req, res) => {
     }
 }
 
-module.exports= refreshToken
+export default refreshToken

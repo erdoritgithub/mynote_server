@@ -1,10 +1,10 @@
-const User= require('../models/UserModel')
-const Token= require('../models/TokenModel')
-const dotenv= require('dotenv')
-const jwt= require('jsonwebtoken')
-const sendMail = require('../utils/sendMail')
-const bcrypthash= require('../utils/bcrypt')
-const { passwordValidator } = require('../middleware/validator')
+import User from '../models/UserModel.js'
+import Token from '../models/TokenModel.js'
+import dotenv from 'dotenv'
+import jwt from 'jsonwebtoken'
+import sendMail from '../utils/sendMail.js'
+import bcrypthash from '../utils/bcrypt.js'
+import { passwordValidator } from '../utils/validator.js'
 
 dotenv.config()
 
@@ -74,4 +74,4 @@ const changeForgottenPassword= async (req, res) => {
 }
 
 
-module.exports= {forgetPassword, changeForgottenPassword}
+export {forgetPassword, changeForgottenPassword}

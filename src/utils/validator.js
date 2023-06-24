@@ -1,4 +1,4 @@
-const validator = require('validator');
+import validator from 'validator';
 
 const usernameValidator = (username) => {
     if(username){
@@ -25,4 +25,4 @@ const passwordValidator = (password) => {
     }
 }
 
-module.exports= {usernameValidator, emailValidator, passwordValidator}
+export {usernameValidator, emailValidator, passwordValidator}

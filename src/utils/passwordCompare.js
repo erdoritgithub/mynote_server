@@ -1,4 +1,4 @@
-const bcrypt= require('bcryptjs')
+import bcrypt from 'bcryptjs'
 
 const passwordCompare = (password1, password2) => {
     // comparing the request password and hash password
@@ -6,4 +6,4 @@ const passwordCompare = (password1, password2) => {
 
 }
 
-module.exports= passwordCompare
+export default passwordCompare

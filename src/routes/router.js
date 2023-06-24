@@ -1,11 +1,11 @@
-const express= require('express')
+import express from 'express'
 const router= express.Router()
-const Users= require('../controllers/Users')
-const Login= require('../controllers/Login')
-const refreshToken= require('../controllers/RefreshToken')
-const {authMiddleware, isAdmin}= require('../middleware/authMiddleware')
-const jwtToken = require('../middleware/jwtToken')
-const {forgetPassword, changeForgottenPassword}= require('../controllers/ForgetPassword')
+import Users from '../controllers/Users.js'
+import Login from '../controllers/Login.js'
+import refreshToken from '../controllers/RefreshToken.js'
+import { authMiddleware, isAdmin } from '../middleware/authMiddleware.js'
+import jwtToken from '../middleware/jwtToken.js'
+import { forgetPassword, changeForgottenPassword } from '../controllers/ForgetPassword.js'
 
 // Homepage
 router.get('/', (req, res) => {
@@ -44,4 +44,4 @@ router.get('/*', (req, res) => {
     res.status(500).send('404 not Found')
 })
 
-module.exports= router
+export default router

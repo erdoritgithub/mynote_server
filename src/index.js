@@ -1,7 +1,7 @@
-const express= require('express')
-const router= require('./routes')
-const cookieParser = require('cookie-parser')
-const bodyParser= require('body-parser')
+import express from 'express'
+import cookieParser  from 'cookie-parser'
+import bodyParser from 'body-parser'
+import router from './routes/router.js'
 
 const app = express()
 // port

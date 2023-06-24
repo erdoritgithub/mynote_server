@@ -1,5 +1,5 @@
-const bcrypt = require('bcryptjs');
-const dotenv= require('dotenv')
+import bcrypt from 'bcryptjs'
+import dotenv from 'dotenv'
 
 dotenv.config()
 
@@ -11,4 +11,4 @@ const bcrypthash= (password) => {
     return bcrypt.hashSync(password, salt);
 }
 
-module.exports= bcrypthash
+export default bcrypthash

@@ -1,6 +1,6 @@
-const User= require('../models/UserModel')
-const jwt= require('jsonwebtoken')
-const dotenv= require('dotenv')
+import User from '../models/UserModel.js'
+import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv'
 
 dotenv.config()
 
@@ -53,4 +53,4 @@ const isAdmin = async (req, res, next) => {
 }
 
 
-module.exports= { authMiddleware, isAdmin }
+export { authMiddleware, isAdmin }

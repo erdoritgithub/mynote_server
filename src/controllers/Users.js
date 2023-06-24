@@ -1,7 +1,7 @@
-const User= require('../models/UserModel')
-const passwordCompare= require('../utils/passwordCompare')
-const bcrypthash= require('../utils/bcrypt')
-const { usernameValidator, emailValidator, passwordValidator } = require('../middleware/validator')
+import User from '../models/UserModel.js'
+import passwordCompare from '../utils/passwordCompare.js'
+import bcrypthash from '../utils/bcrypt.js'
+import { usernameValidator, emailValidator, passwordValidator } from '../utils/validator.js'
 
 class Users{
 
@@ -193,4 +193,4 @@ class Users{
 
 }
 
-module.exports= Users
+export default Users

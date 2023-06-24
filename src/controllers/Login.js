@@ -1,5 +1,5 @@
-const User= require('../models/UserModel')
-const passwordCompare= require('../utils/passwordCompare')
+import User from '../models/UserModel.js'
+import passwordCompare from '../utils/passwordCompare.js'
 
 class Login{
 
@@ -79,4 +79,4 @@ class Login{
     }
 }
 
-module.exports= Login
+export default Login
