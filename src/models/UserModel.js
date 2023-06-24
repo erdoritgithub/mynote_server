@@ -30,9 +30,6 @@ const User = sequelize.define('user', {
   refresh_token: {
     type: DataTypes.STRING
   },
-  token: {
-    type: DataTypes.STRING
-  },
   is_admin: {
     type: DataTypes.TINYINT
   }

@@ -22,6 +22,10 @@ const jwtToken = async (req, res, next) =>{
     });
 
     // send cookie
+    res.cookie('accessToken', accessToken, { 
+        httpOnly: true, 
+        maxAge: 24 * 60 * 60 * 1000 
+    })
     res.cookie('refreshToken', refreshToken, { 
         httpOnly: true, 
         maxAge: 24 * 60 * 60 * 1000 

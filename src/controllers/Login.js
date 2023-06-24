@@ -7,7 +7,7 @@ class Login{
     static loginUser= async (req, res) => {
 
         try {
-
+            const token = req.cookies.accessToken
             // find user by username
             const user= await User.findAll({
                 where: {
@@ -19,7 +19,7 @@ class Login{
             const result = {
                 username: user[0].username,
                 email: user[0].email,
-                token: user[0].token
+                token: token
             }
 
             // comparing the request password and hash password
@@ -60,6 +60,7 @@ class Login{
             if(!user) {
                 // delete cookie if user is not exist
                 res.clearCookie('refreshToken')
+                res.clearCookie('accessToken')
                 return res.sendStatus(204)
             }
     
@@ -72,6 +73,7 @@ class Login{
     
             // delete cookie
             res.clearCookie('refreshToken')
+            res.clearCookie('accessToken')
             return res.sendStatus(200)
         } catch (error) {
             res.send(error)
