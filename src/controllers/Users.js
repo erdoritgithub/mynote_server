@@ -103,7 +103,7 @@ class Users{
             }
 
             // update user by id
-            await User.update( req.body , {
+            const update= await User.update( req.body , {
                 where: {
                   id: req.params.id
                 }

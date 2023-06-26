@@ -8,7 +8,7 @@ const jwtToken = async (req, res, next) =>{
 
     // access token
     const accessToken= jwt.sign({ data: req.body.username }, process.env.JWT_SECRET_KEY, 
-        { expiresIn: '5m' });
+        { expiresIn: '1h' });
 
     // refresh token
     const refreshToken= jwt.sign({ data: req.body.username }, 
@@ -23,11 +23,11 @@ const jwtToken = async (req, res, next) =>{
 
     // send cookie
     res.cookie('accessToken', accessToken, { 
-        httpOnly: true, 
+        httpOnly: false, 
         maxAge: 24 * 60 * 60 * 1000 
     })
     res.cookie('refreshToken', refreshToken, { 
-        httpOnly: true, 
+        httpOnly: false, 
         maxAge: 24 * 60 * 60 * 1000 
     })
 

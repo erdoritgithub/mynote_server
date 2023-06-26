@@ -33,6 +33,8 @@ router.get('/forgetPassword/:id', forgetPassword)
 router.get('/notes/all', authMiddleware, Notes.getAllNotes)
 // getting user notes
 router.get('/notes/user', authMiddleware, Notes.getAllNotesByUser)
+// getting user notes by slug
+router.get('/note/:slug', authMiddleware, Notes.getAllNotesByUserAndSlug)
 
 // put
 // update user

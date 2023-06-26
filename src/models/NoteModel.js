@@ -23,6 +23,11 @@ const Note= sequelize.define('note', {
       allowNull: false,
       require: true
     },
+    author : {
+      type: DataTypes.STRING,
+      allowNull: false,
+      require: true
+    },
     description : {
       type: DataTypes.TEXT
     }

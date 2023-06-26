@@ -21,10 +21,19 @@ class Notes{
                 slug: req.body.slug,
                 excerpt: req.body.excerpt,
                 description: req.body.description,
+                author: user[0].username,
                 user_id: user[0].id
             })
 
-            res.status(200).json(note)
+            const result= {
+                title: note.title,
+                slug: note.slug,
+                excerpt: note.excerpt,
+                description: note.description,
+                author: note.author
+            }
+
+            res.status(200).json(result)
             
         } catch (error) {
             res.status(500).send(error)
@@ -35,7 +44,14 @@ class Notes{
         try {
             // find all notes
             const notes= await Note.findAll()
-            res.status(200).json(notes)
+            const result= {
+                title: notes[0].title,
+                slug: notes[0].slug,
+                excerpt: notes[0].excerpt,
+                description: notes[0].description,
+                author: notes[0].author,
+            }
+            res.status(200).json(result)
         } catch (error) {
             res.status(500).send('cannot get all notes')
         }
@@ -60,7 +76,55 @@ class Notes{
                 }
             })
 
-            res.status(200).json(notes)
+            const result= notes.map((note) => (
+                    {
+                        title: note.title,
+                        slug: note.slug,
+                        excerpt: note.excerpt,
+                        description: note.description,
+                        author: note.author,
+                    }
+                )
+            ) 
+
+            res.status(200).json(result)
+        } catch (error) {
+            res.status(500).send('cannot get user notes')
+        }
+    }
+
+    static getAllNotesByUserAndSlug= async (req, res) => {
+        try {
+            // get cookie
+            const refreshToken= req.cookies.refreshToken
+            
+            // find user by refresh_token
+            const user = await User.findAll({
+                where: {
+                    refresh_token: refreshToken
+                }
+            })
+    
+            // find notes by user
+            const notes= await Note.findAll({
+                where: {
+                    user_id: user[0].id,
+                    slug: req.params.slug
+                }
+            })
+
+            const result= notes.map((note) => (
+                    {
+                        title: note.title,
+                        slug: note.slug,
+                        excerpt: note.excerpt,
+                        description: note.description,
+                        author: note.author,
+                    }
+                )
+            ) 
+
+            res.status(200).json(result)
         } catch (error) {
             res.status(500).send('cannot get user notes')
         }
