@@ -20,6 +20,8 @@ router.post('/users/register', Users.registerUsers)
 router.post('/users/login', jwtToken, Login.loginUser)
 // notes
 router.post('/notes/add', authMiddleware, Notes.addNote)
+// forget password
+router.post('/forgetPassword', forgetPassword)
 
 // get
 // getting user/users
@@ -27,8 +29,6 @@ router.get('/users', authMiddleware, Users.getAllUsers)
 router.get('/users/:id', authMiddleware, Users.getUser)
 // refresh token
 router.get('/token', refreshToken)
-// forget password
-router.get('/forgetPassword/:id', forgetPassword)
 // get all notes
 router.get('/notes/all', authMiddleware, Notes.getAllNotes)
 // getting user notes
@@ -44,12 +44,14 @@ router.put('/forgetPassword/:token', changeForgottenPassword)
 // update password by id
 router.put('/updatePassword/:id', authMiddleware, Users.updatePassword)
 // update notes of user
-router.put('/notes/user/update/:id', authMiddleware, Notes.updateNoteByUser)
+router.put('/notes/user/update/:slug', authMiddleware, Notes.updateNoteByUser)
 
 // delete notes of user
-router.delete('/notes/user/delete/:id', authMiddleware, Notes.deleteNoteByUser)
+router.delete('/note/user/delete/:slug', authMiddleware, Notes.deleteNoteByUser)
+// delete notes of users
+router.delete('/notes/user/delete/:slugs', authMiddleware, Notes.deleteNotesByUser)
 // logout
-router.delete('/logout', authMiddleware, Login.logoutUser)
+router.delete('/logout',  Login.logoutUser)
 // delete user
 router.delete('/users/:id', authMiddleware, isAdmin, Users.deleteUser)
 

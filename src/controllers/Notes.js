@@ -1,5 +1,7 @@
 import Note from "../models/NoteModel.js";
+import RefreshToken from "../models/RefreshTokenModel.js";
 import User from "../models/UserModel.js";
+import slugify from "../utils/slugify.js";
 
 class Notes{
 
@@ -8,27 +10,21 @@ class Notes{
             // get cookie
             const refreshToken= req.cookies.refreshToken
             
-            // find user by refresh_token
-            const user = await User.findAll({
-                where: {
-                    refresh_token: refreshToken
-                }
+            const token = await RefreshToken.findAll({
+                token: refreshToken
             })
     
             // add create note by user
             const note= await Note.create({
                 title: req.body.title,
-                slug: req.body.slug,
-                excerpt: req.body.excerpt,
+                slug: slugify(req.body.title),
                 description: req.body.description,
-                author: user[0].username,
-                user_id: user[0].id
+                user_id: token[0].user_id
             })
 
             const result= {
                 title: note.title,
                 slug: note.slug,
-                excerpt: note.excerpt,
                 description: note.description,
                 author: note.author
             }
@@ -47,7 +43,6 @@ class Notes{
             const result= {
                 title: notes[0].title,
                 slug: notes[0].slug,
-                excerpt: notes[0].excerpt,
                 description: notes[0].description,
                 author: notes[0].author,
             }
@@ -61,14 +56,18 @@ class Notes{
         try {
             // get cookie
             const refreshToken= req.cookies.refreshToken
+
+            const token = await RefreshToken.findAll({
+                token: refreshToken
+            })
             
             // find user by refresh_token
             const user = await User.findAll({
                 where: {
-                    refresh_token: refreshToken
+                    id: token[0].user_id
                 }
             })
-    
+        
             // find notes by user
             const notes= await Note.findAll({
                 where: {
@@ -80,7 +79,6 @@ class Notes{
                     {
                         title: note.title,
                         slug: note.slug,
-                        excerpt: note.excerpt,
                         description: note.description,
                         author: note.author,
                     }
@@ -117,7 +115,6 @@ class Notes{
                     {
                         title: note.title,
                         slug: note.slug,
-                        excerpt: note.excerpt,
                         description: note.description,
                         author: note.author,
                     }
@@ -146,7 +143,7 @@ class Notes{
             const note= await Note.update( req.body, {
                 where: {
                     user_id: user[0].id,
-                    id: req.params.id
+                    slug: req.params.slug
                 }
             })
 
@@ -172,7 +169,7 @@ class Notes{
             const note= await Note.destroy({
                 where: {
                     user_id: user[0].id,
-                    id: req.params.id
+                    slug: req.params.slug
                 }
             })
 
@@ -181,6 +178,35 @@ class Notes{
             res.status(500).send('cannot delete user notes')
         }
     }
+
+    static deleteNotesByUser= async (req, res) => {
+        try {
+            // get cookie
+            const refreshToken= req.cookies.refreshToken
+            
+            // find user by refresh_token
+            const user = await User.findAll({
+                where: {
+                    refresh_token: refreshToken
+                }
+            })
+
+            const slugs = req.params.slugs.split('&')
+    
+            // delete note by user
+            const note= await Note.destroy({
+                where: {
+                    user_id: user[0].id,
+                    slug: slugs
+                }
+            })
+
+            res.status(200).json(note)
+        } catch (error) {
+            res.status(500).send('cannot delete user notes')
+        }
+    }
+
 
 }
 

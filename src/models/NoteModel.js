@@ -18,16 +18,6 @@ const Note= sequelize.define('note', {
       unique: true,
       require: true
     },
-    excerpt : {
-      type: DataTypes.STRING,
-      allowNull: false,
-      require: true
-    },
-    author : {
-      type: DataTypes.STRING,
-      allowNull: false,
-      require: true
-    },
     description : {
       type: DataTypes.TEXT
     }

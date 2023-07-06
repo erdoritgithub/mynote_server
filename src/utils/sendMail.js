@@ -17,7 +17,7 @@ const sendMail = async (token, email) => {
             from: 'erdoronal28@gmail.com',
             to: email,
             subject: 'Test mail',
-            text: `http://localhost:3000/${token}`
+            text: `http://localhost:3000/forgetPassword/${token}`
         };
         
         mailTransporter.sendMail(mailDetails, function(err, data) {

@@ -1,3 +1,4 @@
+import RefreshToken from '../models/RefreshTokenModel.js';
 import User from '../models/UserModel.js'
 import passwordCompare from '../utils/passwordCompare.js'
 
@@ -50,14 +51,14 @@ class Login{
             }
     
             // find user by refresh_token
-            const user= await User.findAll({
+            const token= await RefreshToken.findAll({
                 where: {
-                    refresh_token: refreshToken
+                    token: refreshToken
                 }
             })
     
             // check if user is not exist
-            if(!user) {
+            if(!token) {
                 // delete cookie if user is not exist
                 res.clearCookie('refreshToken')
                 res.clearCookie('accessToken')
@@ -65,9 +66,9 @@ class Login{
             }
     
             // update the refresh_token
-            await User.update({refresh_token: null}, {
+            await RefreshToken.destroy({
                 where:{
-                    id: user[0].id
+                    token: refreshToken
                 }
             })
     

@@ -2,6 +2,7 @@ import { DataTypes } from 'sequelize';
 import sequelize from '../db/index.js';
 import Token from './TokenModel.js';
 import Note from './NoteModel.js';
+import RefreshToken from './RefreshTokenModel.js';
 
 
 const User = sequelize.define('user', {
@@ -27,9 +28,6 @@ const User = sequelize.define('user', {
     allowNull: false,
     require: true
   },
-  refresh_token: {
-    type: DataTypes.STRING
-  },
   is_admin: {
     type: DataTypes.TINYINT
   }
@@ -43,6 +41,13 @@ User.hasOne(Token, {
 });
 
 User.hasMany(Note, {
+  foreignKey: {
+    name: 'user_id',
+    type: DataTypes.UUID
+  }
+})
+
+User.hasMany(RefreshToken, {
   foreignKey: {
     name: 'user_id',
     type: DataTypes.UUID

@@ -14,7 +14,7 @@ const forgetPassword= async (req, res) => {
         // find user by id
         const user= await User.findAll({
             where: {
-              id: req.params.id
+              email: req.body.email
             }
         });
 

@@ -1,3 +1,4 @@
+import RefreshToken from '../models/RefreshTokenModel.js'
 import User from '../models/UserModel.js'
 import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
@@ -12,23 +13,29 @@ const jwtToken = async (req, res, next) =>{
 
     // refresh token
     const refreshToken= jwt.sign({ data: req.body.username }, 
-        process.env.JWT_REFRESH_SECRET_KEY, { expiresIn: '1d' });
-
-    // update token and refresh token to database
-    await User.update( {refresh_token: refreshToken, token: accessToken} , {
+        process.env.JWT_REFRESH_SECRET_KEY, { expiresIn: '1h' });
+    
+    const user= await User.findAll({
         where: {
             username: req.body.username
         }
     });
 
+    // update token and refresh token to database
+    await RefreshToken.create({
+        token: refreshToken,
+        user_id: user[0].id
+    })
+   
+
     // send cookie
     res.cookie('accessToken', accessToken, { 
         httpOnly: false, 
-        maxAge: 24 * 60 * 60 * 1000 
+        maxAge: 1 * 60 * 60 * 1000 
     })
     res.cookie('refreshToken', refreshToken, { 
         httpOnly: false, 
-        maxAge: 24 * 60 * 60 * 1000 
+        maxAge: 1 * 60 * 60 * 1000 
     })
 
     next()
